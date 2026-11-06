@@ -12,7 +12,7 @@
  * - Handles bookmark folder creation and organization automatically
  */
 
-import { BOOKMARK_ROOT_TITLE } from './constants.js';
+import { BOOKMARK_ROOT_TITLE, LEGACY_BOOKMARK_ROOT_TITLE } from './constants.js';
 import { Logger } from './logger.js';
 
 const LocalStorage = {
@@ -82,10 +82,12 @@ const LocalStorage = {
 
     getOrCreateArcifyFolder: async function () {
         let folder = (await chrome.bookmarks.search({ title: BOOKMARK_ROOT_TITLE })).find(node => !node.url);
-        if (!folder) {
-            folder = await chrome.bookmarks.create({ title: BOOKMARK_ROOT_TITLE });
-        }
-        return folder;
+        if (folder) return folder;
+        // Rename an existing Arcify folder rather than creating an empty root next to it,
+        // which would make a default space appear beside the user's real spaces.
+        const legacy = (await chrome.bookmarks.search({ title: LEGACY_BOOKMARK_ROOT_TITLE })).find(node => !node.url);
+        if (legacy) return chrome.bookmarks.update(legacy.id, { title: BOOKMARK_ROOT_TITLE });
+        return chrome.bookmarks.create({ title: BOOKMARK_ROOT_TITLE });
     },
     getOrCreateSpaceFolder: async function (spaceName) {
         const arcifyFolder = await this.getOrCreateArcifyFolder();

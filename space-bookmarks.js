@@ -12,6 +12,14 @@ export async function getSpaceBookmarkFolder(space) {
     return folder;
 }
 
+// Only a folder that no longer exists counts as missing: a folder moved out of the root still
+// holds the user's bookmarks, so deleting that space stays refused.
+export async function isSpaceFolderMissing(space) {
+    if (!space?.bookmarkFolderId) return true;
+    const [folder] = await chrome.bookmarks.get(space.bookmarkFolderId).catch(() => []);
+    return !folder || Boolean(folder.url);
+}
+
 export async function getSpaceBookmarkTree(space) {
     const folder = await getSpaceBookmarkFolder(space);
     const read = async node => ({

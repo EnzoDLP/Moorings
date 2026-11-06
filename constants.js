@@ -7,6 +7,8 @@
 
 // Chrome bookmark folder holding one sub-folder per space
 export const BOOKMARK_ROOT_TITLE = 'Moorings';
+// Name used before the fork; renamed in place on first start
+export const LEGACY_BOOKMARK_ROOT_TITLE = 'Arcify';
 
 // CSS class names used throughout the application
 export const CSS_CLASSES = {

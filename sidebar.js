@@ -1,4 +1,4 @@
-import { getSpaceBookmarkById, getSpaceBookmarkFolder, getSpaceBookmarkTree, removeSpacePin } from './space-bookmarks.js';
+import { getSpaceBookmarkById, getSpaceBookmarkFolder, getSpaceBookmarkTree, isSpaceFolderMissing, removeSpacePin } from './space-bookmarks.js';
 import { initSidebarTour } from './sidebar-tour.js';
 /**
  * Sidebar - Main extension UI and tab/space management
@@ -975,6 +975,12 @@ function createSpaceElement(space) {
     });
 
     deleteSpaceBtn.addEventListener('click', async () => {
+        if (await isSpaceFolderMissing(space)) {
+            if (confirm(`Remove "${space.name}"? Its bookmark folder no longer exists, so no bookmark will be deleted.`)) {
+                await deleteSpace(space.id, { folderMissing: true });
+            }
+            return;
+        }
         let message;
         try {
             const folder = await getSpaceBookmarkFolder(space);
@@ -3466,15 +3472,19 @@ function countBookmarks(node) {
     return (node.children || []).reduce((sum, child) => sum + countBookmarks(child), 0);
 }
 
-async function deleteSpace(spaceId) {
+async function deleteSpace(spaceId, { folderMissing = false } = {}) {
     Logger.log('Deleting space:', spaceId);
     const space = spaces.find(s => s.id === spaceId);
     if (space) {
         editorSessions.dispose('folder-pending', spaceId);
         editorSessions.dispose('space', spaceId);
-        const folderToDelete = await getSpaceBookmarkFolder(space);
-        await chrome.bookmarks.removeTree(folderToDelete.id);
-        await LocalStorage.removeSpaceRegistryEntry(folderToDelete.id);
+        if (folderMissing) {
+            await LocalStorage.removeSpaceRegistryEntry(space.bookmarkFolderId);
+        } else {
+            const folderToDelete = await getSpaceBookmarkFolder(space);
+            await chrome.bookmarks.removeTree(folderToDelete.id);
+            await LocalStorage.removeSpaceRegistryEntry(folderToDelete.id);
+        }
         // Close live tabs owned by the deleted space.
         const ownedTabs = (await chrome.tabs.query({})).filter(t => ownerOf(spaces, t.id)?.id === spaceId);
 
