@@ -26,7 +26,11 @@ jobs:
       
       - name: Install dependencies
         run: npm ci
-      
+
+      # The npm postinstall download of Chrome can fail silently; install it explicitly.
+      - name: Install Puppeteer browser
+        run: npx puppeteer browsers install chrome
+
       - name: Build extension (production)
         run: npm run build
 
