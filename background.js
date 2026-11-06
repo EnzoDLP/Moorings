@@ -78,7 +78,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     if (chrome.contextMenus) {
         chrome.contextMenus.create({
             id: "openArcify",
-            title: "Arcify",
+            title: "Moorings",
             contexts: ["all"]
         });
     }

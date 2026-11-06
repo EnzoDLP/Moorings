@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Arcify: Arc like vertical tab spaces",
+  "name": "Moorings: vertical tab spaces",
   "version": "5.1.0",
-  "description": "A sidebar extension that replicates Arc browser's tab management system",
+  "description": "Vertical tab spaces with pinned links that always come back to where you moored them. A fork of Arcify.",
   "permissions": [
     "tabs",
     "tabGroups",

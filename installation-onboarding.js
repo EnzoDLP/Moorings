@@ -45,11 +45,11 @@ function render(next) {
         const finished = state?.status === 'completed';
         const skipped = state?.status === 'skipped';
         $('handoff-title').textContent = finished || skipped ? 'Make yourself at home.' : 'Continue the tutorial in your sidebar.';
-        $('handoff-copy').textContent = finished || skipped ? 'Your sidebar is ready. Replay the tutorial anytime from Arcify Settings.' : 'Follow the highlights in Arcify. Everything you need, including practice tabs, is waiting there.';
+        $('handoff-copy').textContent = finished || skipped ? 'Your sidebar is ready. Replay the tutorial anytime from Moorings Settings.' : 'Follow the highlights in Moorings. Everything you need, including practice tabs, is waiting there.';
     }
     updateMotion();
 }
-function showError(error) { $('error').hidden = false; $('error').textContent = `${error.message}. Try again, or open Arcify from its toolbar icon.`; }
+function showError(error) { $('error').hidden = false; $('error').textContent = `${error.message}. Try again, or open Moorings from its toolbar icon.`; }
 $('setup-next').addEventListener('click', () => showSetupStep(setupStep + 1));
 $('setup-back').addEventListener('click', () => showSetupStep(setupStep - 1));
 stepButtons.forEach((button, index) => button.addEventListener('click', () => showSetupStep(index)));

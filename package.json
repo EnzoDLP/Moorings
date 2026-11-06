@@ -1,7 +1,7 @@
 {
-  "name": "arcify",
+  "name": "moorings",
   "version": "5.1.0",
-  "description": "A sidebar extension that replicates Arc browser's tab management system",
+  "description": "Vertical tab spaces with pinned links that always come back to where you moored them. A fork of Arcify.",
   "type": "module",
   "scripts": {
     "dev": "vite build --config vite.config.dev.js --watch",
@@ -41,5 +41,12 @@
     "productivity"
   ],
   "author": "Nisarg Kolhe",
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EnzoDLP/Moorings.git"
+  },
+  "contributors": [
+    "EnzoDLP (https://github.com/EnzoDLP)"
+  ]
 }

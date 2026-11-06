@@ -1,8 +1,12 @@
-# Arcify: Arc-like Vertical Tab Spaces
+# Moorings: Vertical Tab Spaces
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-A Chrome extension that replicates Arc browser's tab management system, providing a vertical sidebar for efficient tab organization and management.
+A Chrome extension with vertical tab spaces whose pinned links always come back to where you moored them: navigate freely, and the saved link stays the same.
+
+> **Fork notice.** Moorings is a modified fork of [Arcify](https://github.com/nisargkolhe/arcify) by Nisarg Kolhe, distributed under the same GPL-3.0 license. Changes in this fork are listed in its git history.
+>
+> Spaces are still stored in a Chrome bookmark folder named **Arcify**, so data stays compatible with the original extension.
 
 ![Demo](assets/extension.gif)
 
