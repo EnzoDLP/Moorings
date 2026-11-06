@@ -183,7 +183,7 @@ export function activateSpaceInDOM(spaceId, spaces, updateSpaceSwitcher) {
     updateSpaceSwitcher();
 }
 
-export function showTabContextMenu(x, y, tab, isPinned, isBookmarkOnly, tabElement, closeTab, spaces, moveTabToSpace, setActiveSpace, allBookmarkSpaceFolders, createSpaceFromInactive, onReplaceBookmarkUrlWithCurrent = null, moveFavoriteToSpace = null) {
+export function showTabContextMenu(x, y, tab, isPinned, isBookmarkOnly, tabElement, closeTab, spaces, moveTabToSpace, setActiveSpace, allBookmarkSpaceFolders, createSpaceFromInactive, onReplaceBookmarkUrlWithCurrent = null, moveFavoriteToSpace = null, rowActions = []) {
     // Remove any existing context menus
     const existingMenu = document.getElementById('tab-context-menu');
     if (existingMenu) {
@@ -198,6 +198,28 @@ export function showTabContextMenu(x, y, tab, isPinned, isBookmarkOnly, tabEleme
     contextMenu.style.top = `${y}px`;
 
     // --- Menu Items ---
+
+    // Duplicate and split view entries, built by tab-actions.js.
+    rowActions.forEach(({ label, run }) => {
+        const option = document.createElement('div');
+        option.className = 'context-menu-item';
+        option.textContent = label;
+        option.addEventListener('click', async () => {
+            contextMenu.remove();
+            try {
+                await run();
+            } catch (error) {
+                Logger.warn(`[ContextMenu] ${label} failed:`, error);
+                alert(`${label} failed: ${error.message}`);
+            }
+        });
+        contextMenu.appendChild(option);
+    });
+    if (rowActions.length) {
+        const separator = document.createElement('div');
+        separator.className = 'context-menu-separator';
+        contextMenu.appendChild(separator);
+    }
 
     // Only show these options for actual tabs that are part of a space
     if (!isBookmarkOnly) {

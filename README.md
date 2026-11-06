@@ -11,6 +11,7 @@ A Chrome extension with vertical tab spaces whose pinned links always come back 
 - **Spaces** live in a Chrome bookmark folder named **Moorings**: each sub-folder is a space, and the order of the folders is the order of the spaces.
 - **Pinned links are bookmarks** inside their space folder. Navigating in a pinned tab never changes the saved link; after a restart, the pin opens its saved URL again.
 - **Folders** nest up to four levels inside a space (right-click a folder → **New Folder**, or drag a folder into another one).
+- Right-click a row to **Duplicate** it (a temporary copy in the same space) or to **Open in Split View** beside the active tab (Chrome 155 or later). The two tabs of a split then share one row in the sidebar.
 - Unpinning removes the bookmark, and deleting a space deletes its folder with everything inside it.
 - Space colors, temporary tabs and archived tabs stay in the extension's local storage: they are lost if the extension is removed, while the bookmarks remain.
 

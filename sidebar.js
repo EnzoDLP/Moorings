@@ -16,6 +16,8 @@ import { initSidebarTour } from './sidebar-tour.js';
 
 import { ChromeHelper } from './chromeHelper.js';
 import { spaceRequest } from './space-client.js';
+import { getRowActions } from './tab-actions.js';
+import { installSplitRows } from './split-rows.js';
 import { SpacePatchQueue } from './space-patch-queue.js';
 import { RefreshCoordinator } from './refresh-coordinator.js';
 import { EditSessionRegistry } from './edit-sessions.js';
@@ -568,6 +570,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     await initSidebar();
+    installSplitRows({ root: document.getElementById('spacesList'), windowId: currentWindow.id, focusTab: id => Utils.focusTab(id) });
     await updatePinnedFavicons(); // Initial load before taking the tour baseline
     initSidebarTour().catch(error => Logger.error("Tour initialization failed:", error));
 
@@ -3083,6 +3086,11 @@ async function createTabElement(tab, isPinned = false, isBookmarkOnly = false) {
         e.preventDefault();
         const arcifyFolder = await LocalStorage.getOrCreateArcifyFolder();
         const allBookmarkSpaceFolders = await chrome.bookmarks.getChildren(arcifyFolder.id);
+        const rowActions = await getRowActions({
+            tab, isBookmarkOnly, tabElement,
+            spaceId: tabElement.closest('.space')?.dataset.spaceId || activeSpaceId,
+            windowId: currentWindow.id
+        });
         showTabContextMenu(
             e.pageX,
             e.pageY,
@@ -3097,7 +3105,8 @@ async function createTabElement(tab, isPinned = false, isBookmarkOnly = false) {
             allBookmarkSpaceFolders,
             createSpaceFromInactive,
             replaceBookmarkUrlWithCurrentUrl,
-            moveFavoriteToSpace
+            moveFavoriteToSpace,
+            rowActions
         );
     });
 
