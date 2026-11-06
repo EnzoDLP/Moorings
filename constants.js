@@ -5,6 +5,9 @@
  * Key Benefits: Eliminates magic strings, improves maintainability, enables easy refactoring
  */
 
+// Chrome bookmark folder holding one sub-folder per space
+export const BOOKMARK_ROOT_TITLE = 'Moorings';
+
 // CSS class names used throughout the application
 export const CSS_CLASSES = {
     // State classes

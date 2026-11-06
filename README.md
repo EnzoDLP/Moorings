@@ -5,277 +5,44 @@
 A Chrome extension with vertical tab spaces whose pinned links always come back to where you moored them: navigate freely, and the saved link stays the same.
 
 > **Fork notice.** Moorings is a modified fork of [Arcify](https://github.com/nisargkolhe/arcify) by Nisarg Kolhe, distributed under the same GPL-3.0 license. Changes in this fork are listed in its git history.
->
-> Spaces are still stored in a Chrome bookmark folder named **Arcify**, so data stays compatible with the original extension.
 
-![Demo](assets/extension.gif)
+## How it works
 
-## Features
+- **Spaces** live in a Chrome bookmark folder named **Moorings**: each sub-folder is a space, and the order of the folders is the order of the spaces.
+- **Pinned links are bookmarks** inside their space folder. Navigating in a pinned tab never changes the saved link; after a restart, the pin opens its saved URL again.
+- **Folders** nest up to four levels inside a space (right-click a folder → **New Folder**, or drag a folder into another one).
+- Unpinning removes the bookmark, and deleting a space deletes its folder with everything inside it.
+- Space colors, temporary tabs and archived tabs stay in the extension's local storage: they are lost if the extension is removed, while the bookmarks remain.
 
-- Vertical tab management
-- Tab grouping functionality
-- Keyboard shortcuts for quick access
-- Bookmark integration
-- Clean, minimal interface
+## Install
 
-## Development Setup
+```bash
+npm ci --ignore-scripts
+npm run build
+```
 
-### Prerequisites
+`PUPPETEER_SKIP_DOWNLOAD=1` before `npm ci` avoids downloading the test browser when the end-to-end tests are not needed.
 
-- Node.js (v16 or higher)
-- npm or yarn
-- Google Chrome or Chromium-based browser
-- Git (for version control)
-- Basic knowledge of HTML, CSS, and JavaScript
+Then in Chrome:
 
-### Quick Start
+1. Open `chrome://extensions` and turn on **Developer mode**.
+2. Click **Load unpacked** and select the `dist/` folder.
+3. Open the sidebar with **⌥ S** (shortcuts can be changed in `chrome://extensions/shortcuts`).
 
-1. **Clone and Install**
-   ```bash
-   git clone https://github.com/nisargkolhe/arcify.git
-   cd arcify
-   npm install
-   ```
+After a rebuild, click the refresh icon on the Moorings card in `chrome://extensions`.
 
-2. **Development Build**
-   ```bash
-   npm run dev
-   ```
-   This creates a `dist-dev/` folder with source maps for debugging and watches for file changes.
+## Update from Arcify
 
-3. **Production Build**
-   ```bash
-   npm run build
-   ```
-   This creates an optimized `dist/` folder ready for distribution.
+```bash
+git pull upstream main
+npm run build
+```
 
-4. **Create Distribution Package**
-   ```bash
-   npm run build:zip
-   ```
-   This builds the extension and creates `arcify-extension.zip` for Chrome Web Store submission.
+## Tests
 
-### Loading the Extension in Chrome
-
-1. **Open Chrome Extensions page**
-   - Navigate to `chrome://extensions/`
-   - Or go to Menu → More Tools → Extensions
-
-2. **Enable Developer Mode**
-   - Toggle the "Developer mode" switch in the top right corner
-
-3. **Load the Extension**
-   - Click "Load unpacked"
-   - Select the `dist/` or `dist-dev/` directory
-   - The extension should now appear in your browser
-
-### Development Workflow
-
-1. **Make Changes**
-   - Edit source files in the root directory
-   - For development: `npm run dev` (watches for changes)
-   - For production testing: `npm run build`
-
-2. **Reload Extension**
-   - Go to `chrome://extensions/`
-   - Click the refresh icon on the Arcify extension card
-   - Or use Ctrl+R in the extension's popup/sidebar
-
-3. **Debug**
-   - Use Chrome DevTools for the extension pages
-   - Check the extension's service worker in `chrome://extensions/`
-   - View console logs in the extension's background page
-
-### Build Scripts
-
-- `npm run dev` - Development build with file watching
-- `npm run build` - Production build
-- `npm run build:zip` - Build and create zip package
-- `npm run zip` - Create zip from existing build
-- `npm run clean` - Remove all build artifacts
-- `npm run preview` - Preview the built extension
-- `npm run info` - Display build information and status
-- `npm run release <type>` - Create a new release (patch/minor/major/x.y.z)
-
-### Release Process
-
-The project uses automated releases via GitHub Actions. To create a new release:
-
-1. **Prepare your changes**
-   ```bash
-   # Make sure all changes are committed
-   git status
-   ```
-
-2. **Create a release**
-   ```bash
-   # For bug fixes (2.2.0 → 2.2.1)
-   npm run release patch
-   
-   # For new features (2.2.0 → 2.3.0)
-   npm run release minor
-   
-   # For breaking changes (2.2.0 → 3.0.0)
-   npm run release major
-   
-   # For specific version
-   npm run release 2.5.0
-   ```
-
-3. **Automated process**
-   - Updates `package.json` and `manifest.json` versions
-   - Builds and tests the extension
-   - Creates a git tag and pushes to GitHub
-   - GitHub Actions automatically:
-     - Builds the extension
-     - Generates release notes from commits
-     - Creates a GitHub release
-     - Attaches the zip file and SHA256 checksum
-
-4. **Monitor the release**
-   - Check the [Actions tab](https://github.com/nisargkolhe/arcify/actions) for build status
-   - Review the generated release at [Releases](https://github.com/nisargkolhe/arcify/releases)
-
-## Issues and Feature Requests
-
-We use GitHub Issues to track bugs and feature requests. Before creating a new issue:
-
-1. Search existing issues to avoid duplicates
-2. Use our issue templates when available
-
-### Reporting Bugs 🐛
-
-1. Go to the [Issues](https://github.com/nisargkolhe/arcify/issues) page
-2. Click "New Issue"
-3. Choose "Bug Report" template if available
-4. Include:
-   - Clear description of the bug
-   - Steps to reproduce
-   - Expected vs actual behavior
-   - Browser version and OS
-   - Screenshots if applicable
-
-### Feature Requests 💡
-
-1. Go to the [Issues](https://github.com/nisargkolhe/arcify/issues) page
-2. Click "New Issue"
-3. Choose "Feature Request" template if available
-4. Include:
-   - Clear description of the feature
-   - Use cases
-   - Potential implementation ideas (optional)
-   - Mock-ups or examples (if applicable)
-
-## Contributing
-
-Discord to discuss development: https://discord.gg/D9jQHQnjNb
-
-We welcome contributions! Here's how you can help:
-
-1. Fork the Repository
-   - Create a fork of this repository on GitHub
-
-2. Create a Branch
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-3. Make Your Changes
-   - Write clean, documented code
-   - Follow existing code style
-   - Test your changes thoroughly
-
-4. Commit Your Changes
-   ```bash
-   git commit -m "Add: brief description of your changes"
-   ```
-
-5. Push to Your Fork
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-6. Submit a Pull Request
-   - Create a Pull Request from your fork to our main repository
-   - Provide a clear description of the changes
-   - Reference any related issues
-
-### Contribution Guidelines
-
-- Write meaningful commit messages
-- Update documentation as needed
-- Add comments to your code where necessary
-- Test your changes before submitting
-- Follow existing code style and conventions
+- `npm run test:unit`: storage, migration and sync tests.
+- `npm run test:e2e`: browser tests (needs the Puppeteer browser).
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
-
-### What this means:
-
-- You can freely use, modify, and distribute this software
-- If you modify and distribute this software, you must:
-  - Make your modifications available under the GPL
-  - Include the original copyright notice
-  - Provide access to the source code
-  - Include the full license text
-
-## Contact
-
-If you have any questions or suggestions, please open an issue on GitHub.
-
-## Acknowledgments
-
-- Inspired by the Arc Browser's innovative tab management system. Huge thanks to the Arc team for coming up with the system we've all grown to love!
-- Thanks to all contributors who help improve this project 
-
-### Independent spaces
-
-Spaces and their tab order are stored by the extension, independently of Chrome tab
-groups. Closing the last tab keeps the space and its bookmarks. Moving, renaming,
-recoloring, or removing a native group does not change a space. The background
-service worker tracks new and closed tabs even when the sidebar is closed; new
-tabs inherit their opener's space, or the active space for their window.
-
-Existing Arcify spaces migrate automatically to stable IDs. On a fresh setup with
-native groups, the sidebar offers an optional **Create spaces** import; declining
-leaves those groups alone. Import copies group names, colors, and current members.
-
-**Settings → Sync Spaces to Chrome Tab Groups** is off by default. Enabling it
-mirrors extension membership, names, colors, and order into per-window groups.
-Extension data remains authoritative, so native group edits are overwritten while
-sync is enabled. Disabling it leaves the current native groups unchanged.
-
-Chrome tab IDs change across browser sessions. Live IDs are kept in extension
-storage during a session; after a browser restart, saved URL records reconnect
-restored tabs and recover space order. Identical URLs in different spaces are
-matched in saved occurrence order because Chrome does not expose a durable tab ID.
-Space definitions and bookmarks remain available even when tabs are not restored.
-
-Pinned tabs are backed by bookmarks in **Arcify → space name**, regardless of the
-tab-group sync setting. Startup and opening the sidebar discover existing space
-folders, including folders synced by Chrome, and display their bookmarks as saved
-pins. Pinning adds a bookmark; unpinning removes its saved bookmark even if the tab
-has navigated to another URL. **Move to Space** on a pinned tab, open or unloaded,
-moves its bookmark into the target space's folder and keeps it pinned. After removing
-a favorite, the brief Undo prompt can restore its bookmark in the same folder and
-position, and an unpinned tab that is still open becomes that favorite's tab again.
-Nested bookmark folders remain nested in the space. Deleting a space also deletes its bookmark folder and all bookmarks inside it.
-
-Space chips follow the order of the space folders under **Arcify**: moving a folder
-in Chrome's bookmark manager reorders the chips, and dragging a chip moves its
-folder. On the first load after updating, space order follows the bookmark folder
-order, so a chip order set by dragging before this change resets once; dragging
-chips afterwards moves the folders and the order sticks.
-
-Run `npm run test:unit` for storage, migration, and sync regression tests. Browser
-coverage lives in `tests/e2e/independent-spaces.test.js` alongside the space, tab,
-bookmark, and drag-and-drop suites.
-
-With **Sync spaces to Chrome tab groups** off, right-click a folder and choose **New Folder** to create a child folder. Spaces support up to four folder levels. Turning sync on disables new nested-folder creation and preserves existing folders.
-
-Drag a folder by its header to reorder it among its siblings, move it to the space's top level, or drop it into an open folder's content to nest it. A folder cannot be dropped into itself or its own subfolders. Nesting by drag follows the same four-level limit and requires sync to be off. Reordering within the folder's current parent works in either sync mode.
-
-Right-click a folder and choose **Move Up** or **Move Down** to swap it with the item shown above or below it within its space or parent folder. Each option is hidden when the folder has no neighbor in that direction.
-
+GNU General Public License v3.0, see [LICENSE](LICENSE). Original work © Nisarg Kolhe and the Arcify contributors.

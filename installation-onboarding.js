@@ -114,17 +114,17 @@ async function loadBookmarkSpaces() {
             ? `We found ${names.length === 1 ? 'an existing space' : `${names.length} existing spaces`}.`
             : 'Bring your bookmarks along.';
         $('bookmark-copy').textContent = names.length
-            ? "The folders in your Arcify bookmarks are ready to become spaces, with their bookmarks as pinned tabs. Copy more folders into Arcify anytime."
-            : "In Chrome's bookmark manager, copy folders into the Arcify folder. Each folder becomes a space, and the bookmarks inside become pinned tabs.";
-        if (!folderId) $('bookmark-copy').textContent += ' Create a folder named Arcify first if it is missing.';
+            ? "The folders in your Moorings bookmarks are ready to become spaces, with their bookmarks as pinned tabs. Copy more folders into Moorings anytime."
+            : "In Chrome's bookmark manager, copy folders into the Moorings folder. Each folder becomes a space, and the bookmarks inside become pinned tabs.";
+        if (!folderId) $('bookmark-copy').textContent += ' Create a folder named Moorings first if it is missing.';
         $('bookmark-detected').hidden = !names.length;
         $('bookmark-detected').textContent = names.slice(0, 3).join(' · ') + (names.length > 3 ? ` · and ${names.length - 3} more` : '');
-        $('bookmarks').textContent = folderId ? 'Open Arcify bookmarks ↗' : 'Open bookmark manager ↗';
+        $('bookmarks').textContent = folderId ? 'Open Moorings bookmarks ↗' : 'Open bookmark manager ↗';
     } catch {
         // Optional discovery must not block setup or claim spaces were detected.
         bookmarkFolderId = undefined;
         $('bookmark-title').textContent = 'Bring your bookmarks along.';
-        $('bookmark-copy').textContent = "Open Chrome's bookmark manager and copy folders into the Arcify folder. Each folder becomes a space, and its bookmarks become pinned tabs. If Arcify isn't there yet, create a folder named Arcify first.";
+        $('bookmark-copy').textContent = "Open Chrome's bookmark manager and copy folders into the Moorings folder. Each folder becomes a space, and its bookmarks become pinned tabs. If Moorings isn't there yet, create a folder named Moorings first.";
         $('bookmark-detected').hidden = true;
         $('bookmarks').textContent = 'Open bookmark manager ↗';
     }

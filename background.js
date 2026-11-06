@@ -1,3 +1,4 @@
+import { BOOKMARK_ROOT_TITLE } from './constants.js';
 import { registerTourMessages } from './tour-state.js';
 registerTourMessages();
 /**
@@ -205,7 +206,7 @@ async function runAutoArchiveCheck() {
         // URLs normalized with the same pinned-URL key the renderer uses (origin+path).
         const protectedUrlKeys = new Set();
         try {
-            const arcifyFolder = (await chrome.bookmarks.search({ title: 'Arcify' })).find(node => !node.url);
+            const arcifyFolder = (await chrome.bookmarks.search({ title: BOOKMARK_ROOT_TITLE })).find(node => !node.url);
             if (arcifyFolder) {
                 const [subTree] = await chrome.bookmarks.getSubTree(arcifyFolder.id);
                 const collectUrls = (node) => {

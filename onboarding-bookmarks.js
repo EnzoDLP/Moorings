@@ -1,6 +1,7 @@
+import { BOOKMARK_ROOT_TITLE } from './constants.js';
 // Read only: setup should describe the actual bookmark tree without creating spaces.
 export async function readBookmarkSpaces() {
-    const roots = await chrome.bookmarks.search({ title: 'Arcify' });
+    const roots = await chrome.bookmarks.search({ title: BOOKMARK_ROOT_TITLE });
     const root = roots.find(node => !node.url);
     if (!root) return { folderId: null, names: [] };
     const children = await chrome.bookmarks.getChildren(root.id);
