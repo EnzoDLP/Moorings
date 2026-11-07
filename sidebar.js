@@ -3084,13 +3084,14 @@ async function createTabElement(tab, isPinned = false, isBookmarkOnly = false) {
     // --- Context Menu ---
     tabElement.addEventListener('contextmenu', async (e) => {
         e.preventDefault();
-        const arcifyFolder = await LocalStorage.getOrCreateArcifyFolder();
-        const allBookmarkSpaceFolders = await chrome.bookmarks.getChildren(arcifyFolder.id);
-        const rowActions = await getRowActions({
-            tab, isBookmarkOnly, tabElement,
-            spaceId: tabElement.closest('.space')?.dataset.spaceId || activeSpaceId,
-            windowId: currentWindow.id
-        });
+        const [allBookmarkSpaceFolders, rowActions] = await Promise.all([
+            LocalStorage.getOrCreateArcifyFolder().then(folder => chrome.bookmarks.getChildren(folder.id)),
+            getRowActions({
+                tab, isBookmarkOnly, tabElement,
+                spaceId: tabElement.closest('.space')?.dataset.spaceId || activeSpaceId,
+                windowId: currentWindow.id
+            })
+        ]);
         showTabContextMenu(
             e.pageX,
             e.pageY,

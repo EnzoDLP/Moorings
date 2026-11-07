@@ -1184,6 +1184,8 @@ describe('Space Management', () => {
       const row = `.space.active .tab[data-tab-id="${tabId}"]`;
       await sidebarPage.waitForSelector(row);
       await sidebarPage.$eval(row, el => el.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true })));
+      // The menu is built asynchronously, so wait for it before clicking.
+      await sidebarPage.waitForSelector('#tab-context-menu .context-menu-item');
       await sidebarPage.evaluate(() => {
         [...document.querySelectorAll('.context-menu-item')].find(el => el.textContent === 'Pin Tab').click();
       });
