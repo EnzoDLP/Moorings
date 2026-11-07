@@ -19,7 +19,7 @@ A sidebar extension that replicates Arc browser's tab management system
 *Coming soon - extension will be available on the Chrome Web Store*
 
 ### Manual Installation
-1. Download `arcify-extension.zip` from the assets below
+1. Download `moorings.zip` from the assets below
 2. Extract the zip file
 3. Open Chrome and go to `chrome://extensions/`
 4. Enable "Developer mode" in the top right
@@ -29,7 +29,7 @@ A sidebar extension that replicates Arc browser's tab management system
 
 | File | SHA256 Checksum |
 |------|----------------|
-| arcify-extension.zip | `{CHECKSUM}` |
+| moorings.zip | `{CHECKSUM}` |
 
 ## 🔧 Compatibility
 

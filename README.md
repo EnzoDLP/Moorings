@@ -17,6 +17,17 @@ A Chrome extension with vertical tab spaces whose pinned links always come back 
 
 ## Install
 
+### Download a build
+
+1. Download [moorings.zip](https://github.com/EnzoDLP/Moorings/releases/latest/download/moorings.zip), rebuilt from `main` after every push whose tests pass, and extract it into a folder you keep.
+2. Open `chrome://extensions` and turn on **Developer mode**.
+3. Click **Load unpacked** and select the extracted folder.
+4. Open the sidebar with **Alt S** (**⌥ S** on macOS; shortcuts can be changed in `chrome://extensions/shortcuts`).
+
+To update, replace the contents of that same folder with the new zip, then click the refresh icon on the Moorings card in `chrome://extensions`. Chrome loads another folder as another extension, whose space colors, temporary tabs and archived tabs start empty.
+
+### Build from source
+
 ```bash
 npm ci --ignore-scripts
 npm run build
@@ -24,13 +35,7 @@ npm run build
 
 `PUPPETEER_SKIP_DOWNLOAD=1` before `npm ci` avoids downloading the test browser when the end-to-end tests are not needed.
 
-Then in Chrome:
-
-1. Open `chrome://extensions` and turn on **Developer mode**.
-2. Click **Load unpacked** and select the `dist/` folder.
-3. Open the sidebar with **⌥ S** (shortcuts can be changed in `chrome://extensions/shortcuts`).
-
-After a rebuild, click the refresh icon on the Moorings card in `chrome://extensions`.
+Then load the `dist/` folder with **Load unpacked** as above. After a rebuild, click the refresh icon on the Moorings card in `chrome://extensions`.
 
 ## Update from Arcify
 
