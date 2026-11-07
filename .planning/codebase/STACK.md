@@ -61,7 +61,7 @@
 **Build Outputs:**
 - Production: `dist/` directory
 - Development: `dist-dev/` directory
-- Distribution: `arcify-extension.zip` for Chrome Web Store
+- Distribution: `moorings.zip` for Chrome Web Store
 
 ## Platform Requirements
 
@@ -100,7 +100,7 @@
 ```bash
 npm run dev          # Development build with watch mode (outputs to dist-dev/)
 npm run build        # Production build (outputs to dist/)
-npm run build:zip    # Build + create arcify-extension.zip for distribution
+npm run build:zip    # Build + create moorings.zip for distribution
 npm run clean        # Remove dist/, dist-dev/, and zip files
 npm run release <type>  # Bump version (patch/minor/major) and push git tag
 npm run info         # Show build information
@@ -118,7 +118,7 @@ npm run info         # Show build information
 **Publishing:**
 1. Bump version: `npm run release patch|minor|major`
 2. Create distribution: `npm run build:zip`
-3. Upload `arcify-extension.zip` to Chrome Web Store
+3. Upload `moorings.zip` to Chrome Web Store
 
 ---
 

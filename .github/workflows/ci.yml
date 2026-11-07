@@ -59,12 +59,61 @@ jobs:
           
           echo "✅ All build artifacts verified!"
       
-      - name: Upload build artifacts (on main branch)
-        if: github.ref == 'refs/heads/main' && matrix.node-version == '18'
+      - name: Upload extension zip (pushes to main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
-          name: extension-build
-          path: |
-            dist/
-            *.zip
+          name: moorings-zip
+          path: moorings.zip
           retention-days: 7
+
+  # Publishes the zip that passed the tests as the "latest" release, so the
+  # extension can be downloaded from a link that never changes, without Node.
+  publish-latest:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: publish-latest
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+
+    steps:
+      - name: Download extension zip
+        uses: actions/download-artifact@v4
+        with:
+          name: moorings-zip
+
+      - name: Replace the latest release
+        run: |
+          # A newer push publishes its own build: never replace it with an older one.
+          head=$(gh api "repos/$GH_REPO/commits/main" --jq .sha)
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "main has moved on to $head; its own run publishes the release."
+            exit 0
+          fi
+
+          version=$(unzip -p moorings.zip manifest.json | jq -r .version)
+          {
+            echo "Moorings $version, built from main at commit ${GITHUB_SHA::7}. This release is replaced after every push to main whose tests pass."
+            cat <<'EOF'
+
+          **Install in Chrome**
+          1. Download `moorings.zip` below and extract it into a folder you keep.
+          2. Open `chrome://extensions` and turn on **Developer mode**.
+          3. Click **Load unpacked** and select the extracted folder.
+
+          **Update**: replace the contents of that same folder with the new zip, then click the refresh icon on the Moorings card in `chrome://extensions`. Another folder would be loaded as another extension, with empty space colors, temporary tabs and archived tabs.
+          EOF
+          } > notes.md
+
+          gh release delete latest --cleanup-tag --yes || echo "No previous latest release."
+          gh release create latest moorings.zip \
+            --target "$GITHUB_SHA" \
+            --title "Moorings $version (latest build of main)" \
+            --notes-file notes.md \
+            --latest
