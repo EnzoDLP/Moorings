@@ -3,14 +3,16 @@
 const NOT_SPLIT = -1;
 const DEBOUNCE_MS = 80;
 
+const isSplitTab = tab => typeof tab.splitViewId === 'number' && tab.splitViewId !== NOT_SPLIT;
+
 // Pairs tab ids that share a split view; the first id of a pair leads and shows the other.
 export function findSplitPairs(rowIds, tabs) {
-    const splitOf = new Map(tabs.map(tab => [tab.id, tab.splitViewId]));
+    const splitOf = new Map(tabs.filter(isSplitTab).map(tab => [tab.id, tab.splitViewId]));
     const waiting = new Map();
     const pairs = [];
     for (const id of new Set(rowIds)) {
         const splitViewId = splitOf.get(id);
-        if (typeof splitViewId !== 'number' || splitViewId === NOT_SPLIT) continue;
+        if (splitViewId === undefined) continue;
         if (waiting.has(splitViewId)) {
             pairs.push({ lead: waiting.get(splitViewId), partner: id });
             waiting.delete(splitViewId);
@@ -86,19 +88,30 @@ export function decorateSplitRows(root, tabs, focusTab) {
 const isChip = node => node.nodeType === Node.ELEMENT_NODE && node.classList.contains('split-partner');
 
 // Keeps split rows in sync with renders, title updates and split changes in this window.
+// Renders are only watched while the window has a split, so the sidebar pays nothing otherwise.
 export function installSplitRows({ root, windowId, focusTab }) {
     let timer;
-    const schedule = () => {
-        clearTimeout(timer);
-        timer = setTimeout(async () => {
-            const tabs = await chrome.tabs.query({ windowId });
-            root.querySelectorAll('.space').forEach(space => decorateSplitRows(space, tabs, focusTab));
-        }, DEBOUNCE_MS);
-    };
-    new MutationObserver(mutations => {
+    let watching = false;
+    const observer = new MutationObserver(mutations => {
         if (mutations.some(m => m.type === 'childList' && ![...m.addedNodes, ...m.removedNodes].every(isChip))) schedule();
         if (mutations.some(m => m.type === 'attributes')) syncSplitActive(root);
-    }).observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+    });
+    const refresh = async () => {
+        const tabs = await chrome.tabs.query({ windowId });
+        if (tabs.some(isSplitTab)) {
+            if (!watching) observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+            watching = true;
+        } else {
+            observer.disconnect();
+            watching = false;
+            if (!root.querySelector('.split-lead, .split-hidden')) return;
+        }
+        root.querySelectorAll('.space').forEach(space => decorateSplitRows(space, tabs, focusTab));
+    };
+    function schedule() {
+        clearTimeout(timer);
+        timer = setTimeout(() => refresh().catch(error => console.warn('Split rows refresh failed:', error)), DEBOUNCE_MS);
+    }
     chrome.tabs.onUpdated.addListener((_id, change, tab) => {
         if (tab.windowId === windowId && change.splitViewId !== undefined) schedule();
     });

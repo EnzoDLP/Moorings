@@ -101,6 +101,8 @@ export async function launchBrowserWithExtension(options = {}) {
 export async function openSidebar(browser, extensionId) {
   const sidebarUrl = `chrome-extension://${extensionId}/sidebar.html`;
   const page = await browser.newPage();
+  // Surface sidebar failures in the test output; a silent rejection is otherwise invisible in CI.
+  page.on('pageerror', error => console.error('Sidebar error:', error.message));
   await page.goto(sidebarUrl, { waitUntil: 'domcontentloaded' });
   // Wait for sidebar JS to initialize (loads spaces from storage, creates DOM)
   await new Promise(r => setTimeout(r, 2000));
